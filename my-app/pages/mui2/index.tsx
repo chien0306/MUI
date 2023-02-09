@@ -1,52 +1,61 @@
 import * as React from 'react';
-import Paper from '@mui/material/Paper';
-import Table from '@mui/material/Table';
-import TableBody from '@mui/material/TableBody';
-import TableCell from '@mui/material/TableCell';
-import TableContainer from '@mui/material/TableContainer';
-import TableHead from '@mui/material/TableHead';
-import TablePagination from '@mui/material/TablePagination';
-import TableRow from '@mui/material/TableRow';
+import KWEDefaultCheckbox from '../../component/checkBox/CheckBox';
+import ColumnGroupingTable from '../../component/table/customTable';
 
 interface Column {
-  id: 'name' | 'code' | 'population' | 'size' | 'density';
+  id: 'name' | 'code' | 'population' | 'size' | 'density' | 'details';
   label: string;
   minWidth?: number;
+  rowSpan?: number;
   align?: 'right';
   format?: (value: number) => string;
+  group?: Array<any>,
 }
 
 const columns: Column[] = [
-  { 
+  {
     id: 'name',
     label: 'Name',
-    minWidth: 170
+    minWidth: 170,
+    rowSpan: 2,
   },
-  { 
+  {
     id: 'code',
     label: 'ISO\u00a0Code',
-    minWidth: 100
+    minWidth: 100,
+    rowSpan: 2,
   },
   {
-    id: 'population',
-    label: 'Population',
-    minWidth: 170,
-    align: 'right',
-    format: (value: number) => value.toLocaleString('en-US'),
-  },
-  {
-    id: 'size',
-    label: 'Size\u00a0(km\u00b2)',
-    minWidth: 170,
-    align: 'right',
-    format: (value: number) => value.toLocaleString('en-US'),
-  },
-  {
-    id: 'density',
-    label: 'Density',
-    minWidth: 170,
-    align: 'right',
-    format: (value: number) => value.toFixed(2),
+    id: 'details',
+    label: 'details',
+    minWidth: 100,
+    rowSpan: 2,
+    group: [
+      {
+        id: 'population',
+        label: 'Population',
+        minWidth: 170,
+        align: 'right',
+        format: (value: number) => value.toLocaleString('en-US'),
+        rowSpan: 1,
+      },
+      {
+        id: 'size',
+        label: 'Size\u00a0(km\u00b2)',
+        minWidth: 170,
+        align: 'right',
+        format: (value: number) => value.toLocaleString('en-US'),
+        rowSpan: 1,
+      },
+      {
+        id: 'density',
+        label: 'Density',
+        minWidth: 170,
+        align: 'right',
+        format: (value: number) => value.toFixed(2),
+        rowSpan: 1,
+      },
+    ]
   },
 ];
 
@@ -86,75 +95,43 @@ const rows = [
   createData('Brazil', 'BR', 210147125, 8515767),
 ];
 
-export default function ColumnGroupingTable() {
-  const [page, setPage] = React.useState(0);
-  const [rowsPerPage, setRowsPerPage] = React.useState(10);
-
-  const handleChangePage = (event: unknown, newPage: number) => {
-    setPage(newPage);
-  };
-
-  const handleChangeRowsPerPage = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setRowsPerPage(+event.target.value);
-    setPage(0);
-  };
+export default function mui2() {
 
   return (
-    <Paper sx={{ width: '100%' }}>
-      <TableContainer sx={{ maxHeight: 440 }}>
-        <Table stickyHeader aria-label="sticky table">
-          <TableHead>
-            <TableRow>
-              <TableCell align="center" colSpan={2}>
-                Country
-              </TableCell>
-              <TableCell align="center" colSpan={3}>
-                Details
-              </TableCell>
-            </TableRow>
-            <TableRow>
-              {columns.map((column) => (
-                <TableCell
-                  key={column.id}
-                  align={column.align}
-                  style={{ top: 57, minWidth: column.minWidth }}
-                >
-                  {column.label}
-                </TableCell>
-              ))}
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {rows
-              .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-              .map((row) => {
-                return (
-                  <TableRow hover role="checkbox" tabIndex={-1} key={row.code}>
-                    {columns.map((column) => {
-                      const value = row[column.id];
-                      return (
-                        <TableCell key={column.id} align={column.align}>
-                          {column.format && typeof value === 'number'
-                            ? column.format(value)
-                            : value}
-                        </TableCell>
-                      );
-                    })}
-                  </TableRow>
-                );
-              })}
-          </TableBody>
-        </Table>
-      </TableContainer>
-      <TablePagination
-        rowsPerPageOptions={[10, 25, 100]}
-        component="div"
-        count={rows.length}
-        rowsPerPage={rowsPerPage}
-        page={page}
-        onPageChange={handleChangePage}
-        onRowsPerPageChange={handleChangeRowsPerPage}
-      />
-    </Paper>
+    <div
+      style={{
+        width: '100%',
+        display: 'flex',
+        direction: 'column',
+        backgroundColor: 'gray',
+      }}>
+      <div
+        style={{
+          width: '20%'
+        }}> dang xuan chien</div>
+      <div
+        style={{
+          width: '80%',
+          margin: '10px 10px',
+          // border: '1px solid black'
+          
+        }}>
+        <ColumnGroupingTable configColumn={columns}/>
+        <div
+          style={{
+            marginTop: '10px',
+            backgroundColor: '#b1154a'
+          }}
+        > dang xuan chien </div>
+        <div>
+          <KWEDefaultCheckbox
+            label={'check'}
+            name={'checkboxxx'}
+          />
+
+        </div>
+      </div>
+    </div>
+
   );
 }
